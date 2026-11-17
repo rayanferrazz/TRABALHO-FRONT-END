@@ -417,7 +417,7 @@ O backend está funcional para autenticação e CRUD de tarefas, mas o frontend 
 
 ## Contexto acadêmico
 
-Trabalho final da disciplina de **Front-end** — Residência de Software **Serratec**.
+Projeto de **extensão de desenvolvimento front end** — Residência de Software **Serratec**.
 
 ## Autor
 
