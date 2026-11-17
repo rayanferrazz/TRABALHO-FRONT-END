@@ -1,92 +1,129 @@
-# Todo List Server
+# Todo List API — Backend (FastAPI)
 
-Este é o servidor da aplicação Todo List, construído com FastAPI.
+Backend da aplicação **Organizador de Tarefas**, construído com **FastAPI**, **SQLAlchemy**, **SQLite** e autenticação **JWT**.
 
-## Pré-requisitos
+> 📖 Documentação completa do projeto (backend + frontend): [README principal](../README.md)
 
-- Python 3.8 ou superior
-- Git (opcional, para clonar o repositório)
+---
 
-## Como Rodar a Aplicação
+## Sumário
 
-### Opção 1: Usando o Script Automatizado
+- [Requisitos](#requisitos)
+- [Como rodar](#como-rodar)
+- [Variáveis de ambiente](#variáveis-de-ambiente)
+- [Endpoints](#endpoints)
+- [Estrutura](#estrutura)
+- [Testes](#testes)
+- [Observações](#observações)
 
-O script `scripts.sh` automatiza a configuração e execução da aplicação.
+---
 
-1. Torne o script executável (se necessário):
-   ```bash
-   chmod +x scripts.sh
-   ```
+## Requisitos
 
-2. Configure o ambiente e instale as dependências:
-   ```bash
-   ./scripts.sh setup
-   ```
+- Python 3.10+
+- pip
 
-3. Execute a aplicação em modo de desenvolvimento:
-   ```bash
-   ./scripts.sh dev
-   ```
+## Como rodar
 
-4. A aplicação estará rodando em `http://localhost:8000`
+```bash
+cd server
+python -m venv venv
+```
 
-Outros comandos disponíveis:
-- `./scripts.sh test-unit`: Executa os testes unitários
-- `./scripts.sh clean`: Limpa arquivos temporários
-- `./scripts.sh help`: Mostra ajuda
+Ative a venv:
 
-### Opção 2: Execução Manual
+```bash
+# Windows (PowerShell)
+.\venv\Scripts\Activate.ps1
 
-Se preferir configurar manualmente:
+# Windows (CMD)
+venv\Scripts\activate.bat
 
-1. Crie um ambiente virtual:
-   ```bash
-   python3 -m venv venv
-   ```
+# Linux/macOS
+source venv/bin/activate
+```
 
-2. Ative o ambiente virtual:
-   - No macOS/Linux:
-     ```bash
-     source venv/bin/activate
-     ```
-   - No Windows:
-     ```bash
-     venv\Scripts\activate
-     ```
+Instale e execute:
 
-3. Instale as dependências:
-   ```bash
-   pip install --upgrade pip
-   pip install -r requirements.txt
-   ```
+```bash
+pip install -r requirements.txt
+uvicorn main:app --reload
+```
 
-4. Execute a aplicação:
-   ```bash
-   uvicorn main:app --reload
-   ```
+A API estará em `http://127.0.0.1:8000`.
 
-5. A aplicação estará rodando em `http://localhost:8000`
+- Swagger UI: `http://127.0.0.1:8000/docs`
+- ReDoc: `http://127.0.0.1:8000/redoc`
 
-## API Documentation
+### Script auxiliar (Git Bash/WSL)
 
-Após iniciar o servidor, acesse a documentação interativa da API em:
-- Swagger UI: `http://localhost:8000/docs`
-- ReDoc: `http://localhost:8000/redoc`
+```bash
+chmod +x scripts.sh
+./scripts.sh setup
+./scripts.sh dev
+```
 
-## Estrutura do Projeto
+| Comando | Ação |
+| --- | --- |
+| `./scripts.sh setup` | Cria a venv e instala dependências |
+| `./scripts.sh dev` | Sobe o Uvicorn com reload |
+| `./scripts.sh test-unit` | Executa o pytest |
+| `./scripts.sh clean` | Remove caches temporários |
+| `./scripts.sh help` | Mostra a ajuda |
 
-- `main.py`: Ponto de entrada da aplicação FastAPI
-- `entities/`: Definições das entidades do banco de dados
-- `schemas/`: Schemas Pydantic para validação
-- `usecases/`: Lógica de negócio
-- `security.py`: Utilitários de segurança e autenticação
-- `database/`: Configurações do banco de dados
-- `tests/`: Testes unitários
+## Variáveis de ambiente
 
-## Desenvolvimento
+| Variável | Padrão | Descrição |
+| --- | --- | --- |
+| `TODO_SECRET_KEY` | `super-secret-key-change-me` | Chave de assinatura do JWT |
 
-Para contribuir com o desenvolvimento:
+> ⚠️ Em produção, sempre defina uma chave forte e aleatória.
 
-1. Siga as instruções de setup acima
-2. Execute os testes antes de commitar: `./scripts.sh test-unit`
-3. Mantenha o código limpo e documentado
+## Endpoints
+
+### Autenticação
+
+| Método | Rota | Descrição |
+| --- | --- | --- |
+| `POST` | `/auth/signup` | Cadastro + token |
+| `POST` | `/auth/login` | Login + token |
+| `GET` | `/auth/me` | Usuário autenticado |
+
+### Tarefas (Bearer token obrigatório)
+
+| Método | Rota | Descrição |
+| --- | --- | --- |
+| `POST` | `/tasks` | Cria tarefa |
+| `GET` | `/tasks` | Lista tarefas do usuário |
+| `GET` | `/tasks/{id}` | Busca tarefa |
+| `PUT` | `/tasks/{id}` | Atualiza tarefa |
+| `DELETE` | `/tasks/{id}` | Remove tarefa |
+
+## Estrutura
+
+```text
+server/
+├── main.py           # Rotas e aplicação FastAPI
+├── security.py       # bcrypt + JWT
+├── database/         # Engine, sessão e init_db
+├── entities/         # Modelos SQLAlchemy (User, Task)
+├── schemas/          # Schemas Pydantic
+├── usecases/         # Regras de negócio
+└── tests/            # Testes pytest
+```
+
+## Testes
+
+```bash
+pytest tests/ -v
+```
+
+Os testes usam SQLite em memória e recriam o schema a cada teste.
+
+> ⚠️ Os testes de tarefas esperam `{"tasks": [...]}`, mas a API retorna um array. Atualize os testes ou o contrato da API.
+
+## Observações
+
+- O banco SQLite é criado em `database/db.sqlite` no startup.
+- O frontend fica em [`../client`](../client) e usa `http://127.0.0.1:8000`.
+- Consulte o [README principal](../README.md) para limitações conhecidas (campo `completed`, `PATCH`, CORS etc.).
