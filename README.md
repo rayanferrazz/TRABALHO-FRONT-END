@@ -6,7 +6,7 @@
 ![JWT](https://img.shields.io/badge/Auth-JWT-black?logo=jsonwebtokens&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
 
-Aplicação full-stack de **lista de tarefas (to-do list)** com autenticação, desenvolvida como trabalho final de **Front-end** da Residência de Software do **Serratec**.
+Aplicação full-stack de **lista de tarefas (to-do list)** com autenticação, desenvolvida como projeto de **extensão de desenvolvimento front end** da **Unicarioca**.
 
 O projeto é dividido em:
 
@@ -417,7 +417,7 @@ O backend está funcional para autenticação e CRUD de tarefas, mas o frontend 
 
 ## Contexto acadêmico
 
-Projeto de **extensão de desenvolvimento front end** — Residência de Software **Serratec**.
+Projeto de **extensão de desenvolvimento front end** — **Unicarioca**.
 
 ## Autor
 
